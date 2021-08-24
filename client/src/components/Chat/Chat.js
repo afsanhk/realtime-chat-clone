@@ -21,8 +21,14 @@ const Chat = ({ location }) => {
     setName(name);
     setRoom(room);
 
-    // You can emit events from clientside to the server side
-    socket.emit("join", { name, room });
+    // You can emit events from clientside to the server side -- you can defined callbacks here to be used in the server-side. Mostly for error handling after this event has happened!
+    socket.emit("join", { name, room }, () => {});
+
+    // Cleanup must be a function
+    return () => {
+      socket.emit("disconnect");
+      socket.off();
+    };
   }, [ENDPOINT, location.search]);
 
   return <h1>Chat</h1>;

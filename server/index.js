@@ -18,8 +18,10 @@ io.on("connection", (socket) => {
   console.log("We have a new connection!");
 
   // Client emits a specific event, server does something on this event
-  socket.on("join", ({ name, room }) => {
+  socket.on("join", ({ name, room }, callback) => {
     console.log(name, room);
+    // The callback triggers some response after this event is handled -- such as error handling
+    // The callback is defined within (i.e. supplied by) the socket.emit function
   });
 
   // Notice that this uses socket.on instead of io.on -> acting on just one socket connection
