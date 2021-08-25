@@ -1,5 +1,5 @@
 import React from "react";
-import "./InfoBar.cass";
+import "./InfoBar.css";
 
 import closeIcon from "../../icons/closeIcon.png";
 import onlineIcon from "../../icons/onlineIcon.png";
