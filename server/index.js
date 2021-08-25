@@ -34,6 +34,9 @@ io.on("connection", (socket) => {
       return callback(error);
     }
 
+    // This joins the user in a room
+    socket.join(user.room);
+
     // This is letting the user know they have joined. Note that in this case, the server emites some message that the client has to handle.
     socket.emit("message", {
       user: "Admin",
@@ -46,9 +49,6 @@ io.on("connection", (socket) => {
     socket.broadcast
       .to(user.room)
       .emit("message", { user: "Admin", text: `${user.name} has joined!` });
-
-    // This joins the user in a room
-    socket.join(user.room);
 
     io.to(user.room).emit("roomData", {
       user: user.room,
@@ -64,10 +64,7 @@ io.on("connection", (socket) => {
     const user = getUser(socket.id); // This is from the socket declaration from above - specific for each client
 
     io.to(user.room).emit("message", { user: user.name, text: message }); // Take the message and push it out to everyone else in the room
-    io.to(user.room).emit("roomData", {
-      room: user.room,
-      users: getUsersInRoom(user.room),
-    });
+
     callback(); // This is so that we can do something after the message is sent on the front end
   });
 
@@ -79,6 +76,10 @@ io.on("connection", (socket) => {
       io.to(user.room).emit("message", {
         user: "Admin",
         text: `${user.name} has left!`,
+      });
+      io.to(user.room).emit("roomData", {
+        room: user.room,
+        users: getUsersInRoom(user.room),
       });
     }
   });

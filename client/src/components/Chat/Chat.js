@@ -7,6 +7,7 @@ import "./Chat.css";
 import InfoBar from "../InfoBar/InfoBar";
 import Input from "../Input/Input";
 import Messages from "../Messages/Messages";
+import TextContainer from "../TextContainer/TextContainer";
 
 // Initialized outside of function
 let socket;
@@ -14,6 +15,7 @@ let socket;
 const Chat = ({ location }) => {
   const [name, setName] = useState("");
   const [room, setRoom] = useState("");
+  const [users, setUsers] = useState("");
   const [message, setMessage] = useState("");
   const [messages, setMessages] = useState([]);
   const ENDPOINT = "localhost:5000";
@@ -28,7 +30,11 @@ const Chat = ({ location }) => {
     setRoom(room);
 
     // You can emit events from clientside to the server side -- you can defined callbacks here to be used in the server-side. Mostly for error handling after this event has happened!
-    socket.emit("join", { name, room }, () => {});
+    socket.emit("join", { name, room }, (error) => {
+      if (error) {
+        alert(error);
+      }
+    });
 
     // Cleanup must be a function
     return () => {
@@ -41,6 +47,10 @@ const Chat = ({ location }) => {
   useEffect(() => {
     socket.on("message", (message) => {
       setMessages([...messages, message]); // No mutation of state
+    });
+
+    socket.on("roomData", ({ users }) => {
+      setUsers(users);
     });
   }, [messages]);
 
@@ -66,6 +76,7 @@ const Chat = ({ location }) => {
           sendMessage={sendMessage}
         />
       </div>
+      <TextContainer users={users} />
     </div>
   );
 };
