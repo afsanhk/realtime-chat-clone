@@ -50,6 +50,11 @@ io.on("connection", (socket) => {
     // This joins the user in a room
     socket.join(user.room);
 
+    io.to(user.room).emit("roomData", {
+      user: user.room,
+      users: getUsersInRoom(user.room),
+    });
+
     // Not really necessary
     callback();
   });
@@ -59,12 +64,23 @@ io.on("connection", (socket) => {
     const user = getUser(socket.id); // This is from the socket declaration from above - specific for each client
 
     io.to(user.room).emit("message", { user: user.name, text: message }); // Take the message and push it out to everyone else in the room
+    io.to(user.room).emit("roomData", {
+      room: user.room,
+      users: getUsersInRoom(user.room),
+    });
     callback(); // This is so that we can do something after the message is sent on the front end
   });
 
   // Notice that this uses socket.on instead of io.on -> acting on just one socket connection
   socket.on("disconnect", () => {
-    console.log("User has left!");
+    const user = removeUser(socket.id);
+
+    if (user) {
+      io.to(user.room).emit("message", {
+        user: "Admin",
+        text: `${user.name} has left!`,
+      });
+    }
   });
 });
 
