@@ -12,7 +12,11 @@ const router = require("./router");
 
 const app = express();
 const server = http.createServer(app);
-const io = socketio(server, { cors: { origin: "http://localhost:3002" } }); // This is an instance of socketio, need to set up cors origin in case socket and server are not served by same port
+
+// This is an instance of socketio, need to set up cors origin in case socket and server are not served by same port
+const io = socketio(server, {
+  cors: { origin: "http://localhost:3002", methods: ["GET", "POST"] },
+});
 
 // Run all socket code inside the io.on wrapper.
 // Important to pass in socket here, this is unique to each connection.
