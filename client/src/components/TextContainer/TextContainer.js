@@ -4,8 +4,7 @@ import "./TextContainer.css";
 
 import onlineIcon from "../../icons/onlineIcon.png";
 
-// We use react-scroll-to-bottom here. It auto scrolls to bottom when height of messages exceeds the height of the container.
-const Messages = ({ users }) => {
+const TextContainer = ({ users }) => {
   return (
     <div className="textContainer">
       <div>
@@ -47,4 +46,4 @@ const Messages = ({ users }) => {
   );
 };
 
-export default Messages;
+export default TextContainer;

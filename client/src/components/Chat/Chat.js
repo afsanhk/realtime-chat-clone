@@ -52,7 +52,7 @@ const Chat = ({ location }) => {
     socket.on("roomData", ({ users }) => {
       setUsers(users);
     });
-  }, [messages]);
+  }, [messages, users]);
 
   // Function to send messages
   const sendMessage = (event) => {
@@ -62,8 +62,6 @@ const Chat = ({ location }) => {
       socket.emit("sendMessage", message, () => setMessage("")); // This callback clears the input
     }
   };
-
-  console.log(message, messages);
 
   return (
     <div className="outerContainer">
